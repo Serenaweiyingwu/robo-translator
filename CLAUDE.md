@@ -12,7 +12,14 @@ Read this first, then `README.md`. Last updated 2026-10-17.
 | Microphone mode | ⚠️ Not tried with a real voice yet; user is saving free quota (do one run when recording the demo) |
 | 小派+ body (`robo/hightorque.py`) | ✅ Tested against the turtlesim stand-in only; real robot IP/login not yet known |
 | Talking gestures | ⏳ Planned, see "Next" |
-| Robot model | ⏳ User chose **Hightorque 小派+ (PiPlus)**, still confirming with organisers. Other options at the event: RoboParty (RP0 has no speaker; RP1) and 为她动力 |
+| Robot model | ⏳ Asked organisers (2026-10-17) for, in order: **① 维他动力 Vbot 大头 robot dog** ② **Hightorque Mini Pi Plus 基础款** ③ RoboParty RP1 (RP0 has no speaker). Code so far targets the Hightorque (ROS 2 docs) |
+
+**Vbot 大头 (维他动力 × 零零后科技)**, the current first choice, from press only (no developer docs seen yet):
+autonomous "跟屁虫" following, depth stereo camera + 16-line LiDAR, face screen + speaker + lights for
+expressions, ROS 2 interface with a GitHub guide (大头EDU edition, 128 TOPS; EDU can carry a back arm).
+No arms otherwise, so body language = following, turning, face expressions. Ranked first because it can do the
+"follows me" part; it drops if its interface doesn't expose following, speaker and face. A Vbot body would be a
+new `Robot` subclass; the translator doesn't change.
 
 ## Deadlines
 
