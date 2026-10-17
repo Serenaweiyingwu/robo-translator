@@ -9,7 +9,7 @@ class Robot:
         raise NotImplementedError
 
     def gesture(self, name: str) -> None:
-        """name is one of: wave, nod, bow, shrug, listen, think."""
+        """name is one of: wave, handshake, cheer, nod, bow, shrug, listen, think."""
         raise NotImplementedError
 
     def face(self, who: str) -> None:

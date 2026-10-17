@@ -1,0 +1,22 @@
+[workspace]
+name = "rp1-ros"
+channels = ["https://prefix.dev/robostack-humble", "https://prefix.dev/conda-forge"]
+platforms = ["osx-arm64"]
+
+[dependencies]
+ros-humble-ros-base = "*"
+ros-humble-turtlesim = "*"
+ros-humble-teleop-twist-keyboard = "*"
+colcon-common-extensions = "*"
+rosdep = "*"
+compilers = "*"
+cmake = "*"
+pkg-config = "*"
+ninja = "*"
+make = "*"
+
+[tasks]
+# CMake 4 can't find pixi's Python on its own, so pass it explicitly.
+build = "colcon build --symlink-install --cmake-args -DPython_EXECUTABLE=$CONDA_PREFIX/bin/python -DPython3_EXECUTABLE=$CONDA_PREFIX/bin/python -DPython_FIND_STRATEGY=LOCATION"
+turtle = "ros2 run turtlesim turtlesim_node"
+controller = "bash -c 'source install/setup.bash && ros2 run ht_mock controller'"

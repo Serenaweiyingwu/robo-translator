@@ -1,6 +1,6 @@
 # Robo — a translator robot
 
-Built for 灵机一动 · Soul Hackathon 2026, running on a RoboParty RP1.
+Built for 灵机一动 · Soul Hackathon 2026, running on a Hightorque 小派+ (PiPlus).
 
 Robo follows you around and interprets for you. Tell it who you're talking to and it translates both ways:
 
@@ -54,15 +54,32 @@ You need a Volcengine account with:
 
 Tip: wear a clip-on wireless mic. The venue is loud and the robot's motors are noisy.
 
-## Deploying to RP1
+## The robot: Hightorque 小派+
 
-Write an `RP1Robot(Robot)` class in `robo/robot.py` using the SDK provided at the event, and map:
+`robo/hightorque.py` drives the 小派+ with the commands from Hightorque's ROS 2 control doc:
 
-| Robo needs | RP1 |
+| Robo | 小派+ |
 |---|---|
-| `say(pcm, rate)` | robot speaker, or a Bluetooth speaker mounted on it |
-| `gesture(name)` | arm/head motion presets (wave, nod, bow, shrug, listen, think) |
-| `face(who)` | turn in place towards you / the guest |
+| start-up | `change_fsm_state ['default']` → `change_state ['standing']` → `change_state ['toggle_policy']`, checking `/hightorque_controller/state` after each step |
+| wave / handshake / cheer | `execute_waypoint` `hello` / `woshou` / `cheer` (allowed while walking) |
+| turn to you / the guest | `/cmd_vel` at 50 Hz, then an explicit stop |
+| speech | laptop or a Bluetooth speaker on the robot |
 
-Following you around depends on what the event SDK exposes (camera + velocity control → person following;
-otherwise "come here" commands).
+```bash
+HT_SSH=user@robot-ip .venv/bin/python -m robo --robot hightorque --robot-check  # try the body, no Doubao calls
+HT_SSH=user@robot-ip .venv/bin/python -m robo --robot hightorque                # translate with the robot
+```
+
+Commands run over SSH on the robot, where Hightorque's (private) `hightorque_msgs` is installed.
+Gestures run on a background thread so Robo never waits for the robot before speaking.
+
+### Testing without the robot
+
+`sim/` has a stand-in controller with the same services and state rules, driving turtlesim:
+
+```bash
+cd ~/rp1-ros && pixi run build      # ROS 2 Humble via RoboStack; see sim/pixi.toml.example
+pixi run turtle                      # terminal 1
+pixi run controller                  # terminal 2
+.venv/bin/python -m robo --robot hightorque --robot-check   # terminal 3, from this repo (HT_SSH unset = local)
+```

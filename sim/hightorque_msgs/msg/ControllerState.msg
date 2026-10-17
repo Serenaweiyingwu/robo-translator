@@ -1,0 +1,3 @@
+string current_mode
+string current_state
+string current_policy
