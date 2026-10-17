@@ -64,8 +64,8 @@ def test_start_confirms_then_greets_guest():
 
 
 def test_translates_both_ways():
-    robo, ai, _ = make([START, {"speaker": "owner", "translation": "Wo ist der Bahnhof?"},
-                        {"speaker": "guest", "translation": "Go straight ahead."}])
+    robo, ai, _ = make([START, {"spoken": "en", "translation": "Wo ist der Bahnhof?"},
+                        {"spoken": "de", "translation": "Go straight ahead."}])
     robo.hear_text("Robo, translate English to German")
     robo.hear_text("Where is the train station?")
     robo.hear_text("Geradeaus.")
@@ -73,16 +73,16 @@ def test_translates_both_ways():
 
 
 def test_listens_in_both_languages_once_started():
-    robo, ai, _ = make([START, {"speaker": "owner", "translation": "Hallo"}])
+    robo, ai, _ = make([START, {"spoken": "en", "translation": "Hallo"}])
     robo.hear_audio(b"wav")  # idle: auto-detect hears the start command
     seen = []
-    ai.chat_json = lambda system, user: seen.append(user) or {"speaker": "owner", "translation": "Hallo"}
+    ai.chat_json = lambda system, user: seen.append(user) or {"spoken": "en", "translation": "Hallo"}
     robo.hear_audio(b"wav")  # active: decoded as English and as German
     assert '"English": "hello"' in seen[0] and '"German": "hallo"' in seen[0]
 
 
 def test_not_a_command_is_translated():
-    robo, ai, _ = make([START, {"action": "none"}, {"speaker": "owner", "translation": "Roboter sind toll"}])
+    robo, ai, _ = make([START, {"action": "none"}, {"spoken": "en", "translation": "Roboter sind toll"}])
     robo.hear_text("Robo, translate English to German")
     robo.hear_text("Robots are great")
     assert ai.spoken[-1] == ("Roboter sind toll", "de")

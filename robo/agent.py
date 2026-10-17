@@ -26,12 +26,12 @@ Return one JSON object:
 "none" = this was not a command (e.g. the owner just mentioned a robot in conversation).
 If the requested language is not supported, use action "none" and say so in "confirm"."""
 
-TRANSLATE_PROMPT = """You are a live interpreter between the owner (speaks {src}) and a guest (speaks {tgt}).
-You get speech-recognition transcripts of ONE utterance, decoded once per language. Only one decoding is real;
-the other is noise. Decide who spoke from which transcript is coherent, then translate it into the other person's language.
+TRANSLATE_PROMPT = """You are a live interpreter between {src_name} ("{src}") and {tgt_name} ("{tgt}").
+You get speech-recognition transcripts of ONE utterance, possibly decoded once per language; only the coherent
+one is real. Work out which language was actually spoken, then translate it into the other one.
 Fix obvious recognition errors. Keep the tone; be natural and brief, the way a human interpreter would speak.
-Return one JSON object: {{"speaker": "owner" | "guest", "translation": "..."}}.
-If neither transcript contains real speech, return {{"speaker": "none", "translation": ""}}."""
+Return one JSON object: {{"spoken": "{src}" | "{tgt}", "translation": "..."}}.
+If there is no real speech, return {{"spoken": "none", "translation": ""}}."""
 
 
 class Translator:
@@ -110,14 +110,14 @@ class Translator:
     # ---- translation ----
 
     def translate(self, transcripts: dict) -> None:
-        src, tgt = LANGUAGES[self.source].name, LANGUAGES[self.target].name
-        shown = {(LANGUAGES[k].name if k else "unknown"): v for k, v in transcripts.items()}
-        result = self.ai.chat_json(TRANSLATE_PROMPT.format(src=src, tgt=tgt),
-                                   json.dumps(shown, ensure_ascii=False))
-        speaker, text = result.get("speaker"), (result.get("translation") or "").strip()
-        if speaker not in ("owner", "guest") or not text:
+        src, tgt = self.source, self.target
+        prompt = TRANSLATE_PROMPT.format(src=src, tgt=tgt, src_name=LANGUAGES[src].name, tgt_name=LANGUAGES[tgt].name)
+        shown = {(LANGUAGES[k].name if k else "transcript"): v for k, v in transcripts.items()}
+        result = self.ai.chat_json(prompt, json.dumps(shown, ensure_ascii=False))
+        spoken, text = result.get("spoken"), (result.get("translation") or "").strip()
+        if spoken not in (src, tgt) or not text:
             return
-        if speaker == "owner":
+        if spoken == src:  # you spoke, so the translation goes to the guest
             self.log(f"you → guest ({self.target}): {text}")
             self._say_to("guest", text, self.target, gesture=self._polite_gesture(self.target))
         else:
