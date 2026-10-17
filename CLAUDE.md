@@ -21,6 +21,27 @@ No arms otherwise, so body language = following, turning, face expressions. Rank
 "follows me" part; it drops if its interface doesn't expose following, speaker and face. A Vbot body would be a
 new `Robot` subclass; the translator doesn't change.
 
+Vbot developer facts (2026-10-18). The organiser sheet `~/Desktop/Vbot 烈变黑客松·硬件清单与使用教程.xlsx` has
+only 3 links: vbot.cn/Detail (specs), forum.vbot.cn, github.com/VitaDynamics/vbot_ros2_msgs. Hardware is
+exclusively assigned (独占分配). Support WeChat **towardsdawn** (note "shenicest参赛").
+- Public msgs repo, **ROS 2 Humble**. Built on the Mac in `~/vbot_ws` with the `~/rp1-ros` pixi env
+  (`pixi run --manifest-path ~/rp1-ros/pixi.toml ...`, same `-DPython_EXECUTABLE` flags); 15 pkgs, 89 interfaces.
+- What Robo needs: `function_msgs/srv/ControlFollowing` (mode FOLLOWING=1 / ACCOMPANY=8 / COME_TO_ME=4),
+  `SetFollowSpeed`; speaker `function_msgs/msg/AgentToSpeechAudioRaw` (16 kHz, 16-bit mono int16 PCM; ask
+  Doubao TTS for 16000) or `SetSpeak` (HUMAN_VOICE text uses the dog's own TTS); `BaseAction`
+  (ROTATE_IN_PLACE angle_rad, MOVE_HEAD pitch/yaw); `lowlevel_msg/msg/HeadCmd` (pitch/yaw deg + ms);
+  mic `speech_msgs/msg/SpeechDogToPhone`; `speech_msgs/msg/WakeupInfo` has **DOA** (voice direction) to turn
+  towards the speaker; `/speech/ChatTtsNotification` reports playback start/end.
+- Only a few names are in the files (`/speech/ChatTtsNotification`, `/lightning/loc_cmd`, `/lightning/save_map`);
+  get the rest with `ros2 topic list -t` / `ros2 service list -t` once on the dog's network.
+- Forum: staff confirm raw mic audio + streaming playback were recently exposed; SSH `vbot@<ip from app>`
+  (one version only accepted public keys); a user's SSH worked but "Zenoh communication refused", so the dog
+  likely uses **rmw_zenoh**. Installed `ros-humble-rmw-zenoh-cpp` 0.1.8 in `~/rp1-ros` (has `rmw_zenohd`).
+  The built-in agent can call custom MCP services (fallback path). Product page: 4-mic array, expression
+  screen, ear lights, 14 joints (12 legs + likely 2 head), UWB module (following likely tracks a UWB tag).
+- Asked support (WeChat draft in chat 2026-10-18): topic/service names, Zenoh router address/port +
+  `ROS_DOMAIN_ID`, SSH access, how to silence the built-in agent while we stream audio, docs/examples.
+
 ## Deadlines
 
 - **2026-10-22 12:00** — readiness submission: environment proof, agent name + description, progress, run proof
