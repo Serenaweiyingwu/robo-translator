@@ -14,6 +14,11 @@ Read this first, then `README.md`. Last updated 2026-10-17.
 | Talking gestures | ⏳ Planned, see "Next" |
 | Robot model | ⏳ Asked organisers (2026-10-17) for, in order: **① 维他动力 Vbot 大头 robot dog** ② **Hightorque Mini Pi Plus 基础款** ③ RoboParty RP1 (RP0 has no speaker). Code so far targets the Hightorque (ROS 2 docs) |
 
+**Concept decided 2026-10-18: a "language guide dog"**, not a robot imitating a human interpreter. It trots
+beside the owner, perks up when someone speaks, turns to them (DOA), and speaks for the owner with face/ear
+expressions and head movement. Design gestures and persona for a dog: head nod/tilt/look, turn to speaker,
+listening/thinking/speaking faces, follow. The Hightorque humanoid stays only as a fallback body.
+
 **Vbot 大头 (维他动力 × 零零后科技)**, the current first choice, from press only (no developer docs seen yet):
 autonomous "跟屁虫" following, depth stereo camera + 16-line LiDAR, face screen + speaker + lights for
 expressions, ROS 2 interface with a GitHub guide (大头EDU edition, 128 TOPS; EDU can carry a back arm).
