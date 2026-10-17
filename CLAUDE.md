@@ -69,6 +69,28 @@ went wrong twice: once nothing saved, once a stray `".env "` file with a trailin
 - Hightorque's voice add-on (小智 / Xiaozhi) is flashed with Windows-only tools; speaker use is unconfirmed,
   so plan on a Bluetooth speaker.
 
+### Event robot: Hightorque **Mini Pi Plus 基础款** (from organisers, 2026-10-17)
+
+The organisers sent two Word docs (`~/Desktop/HT_SDK System描述和二次开发指南.docx`,
+`~/Desktop/HT_机器人电机控制文档.docx`). They describe a **ROS 1** stack, which may not match the ROS 2
+commands above:
+- Control program `sim2real` (≥ 2.2.0) on a Lubancat (Rockchip, RKNN) board, user `hightorque`; status topic
+  `/sim2real_master_node/mtr_state`; config in `~/.sim2real_info.json` → `pd.yaml` (`joint_names`);
+  robot_type `S-12L8A0G2H0W`, action library under `/home/hightorque/action_library/`.
+- States: INIT → STANDING → STANDBY → RUNNING; `RUNNING <-> TRAJ_SINGLE` plays one action (e.g. wave) and
+  returns. The doc doesn't say how to trigger these without the gamepad (`/joy`).
+- **Direct joint control**: `rostopic pub /pi_plus_absolute sensor_msgs/JointState` (or `/pi_plus_relative`),
+  a standard message type, 50–200 Hz. While the policy runs, only motors it isn't using can be commanded,
+  so arms/head should be free during walking.
+- Joints: 12 leg + `l/r_shoulder_pitch`, `l/r_shoulder_roll`, `l/r_upper_arm`, `l/r_elbow`,
+  `head_yaw`, `head_pitch`. **In the doc's sample all arm/head positions read 999.0**, so the 基础款 may have
+  no arm/head motors. Unconfirmed.
+- Asked the organisers: ROS 1 or 2? Arm/head motors on 基础款? How to stand/walk without the gamepad?
+  Speaker: yes if hardware allows (ask how to play audio). New gestures via teach mode: yes if hardware allows.
+- If arms exist, talking gestures = code-defined arm/head keyframes on `/pi_plus_absolute` (no teach mode
+  needed), picked per sentence by the LLM gesture tag. If ROS 1, rewrite `HightorqueRobot` to run
+  `rostopic`/`rosservice` over SSH (the SSH design still holds); the `sim/` stand-in is ROS 2 only.
+
 ## Mac ROS 2 setup (`~/rp1-ros`)
 
 ROS 2 Humble via RoboStack + pixi (`~/.pixi/bin/pixi`, installed from the GitHub release because Homebrew
