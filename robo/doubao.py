@@ -34,7 +34,7 @@ class Doubao:
             ASR_URL,
             headers={
                 "X-Api-Key": self.s.speech_api_key,
-                "X-Api-Resource-Id": "volc.bigasr.auc_turbo",
+                "X-Api-Resource-Id": "volc.seedasr.auc",
                 "X-Api-Request-Id": str(uuid.uuid4()),
                 "X-Api-Sequence": "-1",
             },

@@ -49,7 +49,7 @@ cp .env.example .env            # add your Volcengine keys
 ```
 
 You need a Volcengine account with:
-- **豆包语音** API key, with `volc.bigasr.auc_turbo` (录音文件识别极速版) and `seed-tts-2.0` (语音合成 2.0) enabled
+- **豆包语音** API key, with 录音文件识别2.0 (`volc.seedasr.auc`) and 语音合成2.0 (`seed-tts-2.0`) activated
 - **火山方舟** API key and a Doubao model (default `doubao-seed-1-6-flash-250828`)
 
 Tip: wear a clip-on wireless mic. The venue is loud and the robot's motors are noisy.
