@@ -33,7 +33,7 @@ mic ─► speech recognition (Doubao) ─► "Robo, ..."? ── yes ─► int
 - **Body language.** Robo turns to whoever it's addressing, waves when it greets the guest, nods (or bows for
   Japanese/Korean) when it delivers a translation, and shrugs when something fails.
 - **The robot is behind a small interface** (`robo/robot.py`: `say`, `gesture`, `face`). `FakeRobot` prints
-  actions and plays audio on the laptop; the RP1 adapter replaces it on the day.
+  actions and plays audio on the laptop; `HightorqueRobot` drives the 小派+ (see below).
 
 21 languages supported: English, Chinese, German, French, Spanish, Portuguese, Italian, Japanese, Korean,
 Russian, Arabic, Thai, Vietnamese, Indonesian, Malay, Turkish, Polish, Dutch, Ukrainian, Romanian, Greek.
